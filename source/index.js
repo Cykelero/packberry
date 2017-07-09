@@ -1,6 +1,6 @@
 import Serializer from './Serializer';
 
-let rootSerializer = new Serializer('.');
+const rootSerializer = new Serializer('.');
 
 rootSerializer.register(Object, {
 	to: v => Object.keys(v).reduce((result, key) => {

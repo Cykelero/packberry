@@ -1,6 +1,6 @@
 import Register from './Register';
 
-let SERIALIZATION_VERSION = 1;
+const SERIALIZATION_VERSION = 1;
 
 export default class Serializer {
 	constructor(name) {
@@ -43,7 +43,7 @@ export default class Serializer {
 	toSerializable(value) {
 		if (typeof value === 'object') {
 			// Object: needs conversion
-			let metadata = this._getMetadataForClass(value.constructor);
+			const metadata = this._getMetadataForClass(value.constructor);
 			
 			if (!metadata) {
 				throw new Error(`${value.constructor.name} does not support serialization`);
@@ -59,7 +59,7 @@ export default class Serializer {
 	fromSerializable(serializable) {
 		if (typeof serializable === 'object') {
 			// Object: needs conversion
-			let metadata = this._getMetadataForIdentifier(serializable.classIdentifier);
+			const metadata = this._getMetadataForIdentifier(serializable.classIdentifier);
 			
 			if (!metadata) {
 				throw new Error(`Unknown class ${serializable.classIdentifier} when deserializing`);
@@ -80,7 +80,7 @@ export default class Serializer {
 			metadata.fields.forEach(fieldName => {
 				let fieldValue = instance[fieldName];
 				
-				let fieldFilter = metadata.filters && metadata.filters[fieldName];
+				const fieldFilter = metadata.filters && metadata.filters[fieldName];
 				if (fieldFilter) {
 					fieldValue = fieldFilter(fieldValue);
 				}
@@ -100,8 +100,6 @@ export default class Serializer {
 	}
 	
 	_instanceFromSerializable(serializable, metadata) {
-		let result;
-		
 		if (metadata.fields) {
 			let fieldValues = {};
 			metadata.fields.forEach(fieldName => {
@@ -109,26 +107,24 @@ export default class Serializer {
 			});
 			
 			if (metadata.from) {
-				result = metadata.from(fieldValues);
+				return metadata.from(fieldValues);
 			} else {
-				let orderedFieldValues = metadata.fields.map(fieldName => fieldValues[fieldName]);
-				result = new metadata.klass(...orderedFieldValues);
+				const orderedFieldValues = metadata.fields.map(fieldName => fieldValues[fieldName]);
+				return new metadata.klass(...orderedFieldValues);
 			}
 		} else {
-			result = metadata.from(serializable.data);
+			return metadata.from(serializable.data);
 		}
-		
-		return result;
 	}
 	
 	// Metadata lookup
 	_getMetadataForClass(klass) {
-		let localClassMetadata = this._getLocalMetadataForClass(klass);
+		const localClassMetadata = this._getLocalMetadataForClass(klass);
 		return localClassMetadata || Register.getMetadataForClass(klass);
 	}
 	
 	_getMetadataForIdentifier(identifier) {
-		let parts = identifier.split('/');
+		const parts = identifier.split('/');
 		
 		if (parts[0] === this.name) {
 			return this._getUnverifiedLocalMetadataForClassName(parts[1]);
@@ -138,7 +134,7 @@ export default class Serializer {
 	}
 	
 	_getLocalMetadataForClass(klass) {
-		let metadata = this._getUnverifiedLocalMetadataForClassName(klass.name);
+		const metadata = this._getUnverifiedLocalMetadataForClassName(klass.name);
 		return (metadata && metadata.klass === klass) ? metadata : null;
 	}
 	

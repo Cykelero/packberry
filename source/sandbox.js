@@ -1,6 +1,6 @@
 import * as PackBerry from './index.js';
 
-let serializer = new PackBerry.Serializer('packberry-sandbox');
+const serializer = new PackBerry.Serializer('packberry-sandbox');
 
 (function() {
 	class TestClass {
@@ -13,7 +13,7 @@ let serializer = new PackBerry.Serializer('packberry-sandbox');
 		fields: ['someData']
 	});
 
-	let testInstance = new TestClass('test-value'),
+	const testInstance = new TestClass('test-value'),
 		serializedTestInstance = serializer.toRootSerializable(testInstance),
 		deserializedTestInstance = serializer.fromRootSerializable(serializedTestInstance);
 
@@ -21,7 +21,7 @@ let serializer = new PackBerry.Serializer('packberry-sandbox');
 	console.log('# Deserialized: :', deserializedTestInstance);
 }())
 
-let secondSerializer = new PackBerry.Serializer('packberry-sandbox-2');
+const secondSerializer = new PackBerry.Serializer('packberry-sandbox-2');
 
 let toSerializeWithFirstSerializer;
 
@@ -43,7 +43,7 @@ let toSerializeWithFirstSerializer;
 	toSerializeWithFirstSerializer = new TestClass('test-value-2');
 }())
 
-let serializedTestInstance2 = serializer.toRootSerializable(toSerializeWithFirstSerializer),
+const serializedTestInstance2 = serializer.toRootSerializable(toSerializeWithFirstSerializer),
 	deserializedTestInstance2 = serializer.fromRootSerializable(serializedTestInstance2);
 
 console.log('# X-Serialized: ', serializedTestInstance2);
