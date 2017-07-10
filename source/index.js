@@ -3,19 +3,19 @@ import Serializer from './Serializer';
 const rootSerializer = new Serializer('.');
 
 rootSerializer.register(Object, {
-	to: v => Object.keys(v).reduce((result, key) => {
-		result[key] = Serializer.toSerializable(v[key]);
+	pack: v => Object.keys(v).reduce((result, key) => {
+		result[key] = Serializer.toPacked(v[key]);
 		return result;
 	}, {}),
-	from: s => Object.keys(s).reduce((result, key) => {
-		result[key] = Serializer.fromSerializable(s[key]);
+	unpack: s => Object.keys(s).reduce((result, key) => {
+		result[key] = Serializer.fromPacked(s[key]);
 		return result;
 	}, {})
 });
 
 rootSerializer.register(Array, {
-	to: v => v.map(i => Serializer.toSerializable(i)),
-	from: s => s.map(i => Serializer.fromSerializable(i))
+	pack: v => v.map(i => Serializer.toPacked(i)),
+	unpack: s => s.map(i => Serializer.fromPacked(i))
 });
 
 export { Serializer as Serializer };

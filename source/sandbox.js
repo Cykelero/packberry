@@ -14,8 +14,8 @@ const serializer = new PackBerry.Serializer('packberry-sandbox');
 	});
 
 	const testInstance = new TestClass('test-value'),
-		serializedTestInstance = serializer.toRootSerializable(testInstance),
-		deserializedTestInstance = serializer.fromRootSerializable(serializedTestInstance);
+		serializedTestInstance = serializer.toRootPacked(testInstance),
+		deserializedTestInstance = serializer.fromRootPacked(serializedTestInstance);
 
 	console.log('# Serialized: ', serializedTestInstance);
 	console.log('# Deserialized: :', deserializedTestInstance);
@@ -43,8 +43,8 @@ let toSerializeWithFirstSerializer;
 	toSerializeWithFirstSerializer = new TestClass('test-value-2');
 }())
 
-const serializedTestInstance2 = serializer.toRootSerializable(toSerializeWithFirstSerializer),
-	deserializedTestInstance2 = serializer.fromRootSerializable(serializedTestInstance2);
+const serializedTestInstance2 = serializer.toRootPacked(toSerializeWithFirstSerializer),
+	deserializedTestInstance2 = serializer.fromRootPacked(serializedTestInstance2);
 
 console.log('# X-Serialized: ', serializedTestInstance2);
 console.log('# X-Deserialized: :', deserializedTestInstance2);

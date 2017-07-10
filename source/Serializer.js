@@ -22,25 +22,25 @@ export default class Serializer {
 	
 	// Serialization/deserialization
 	toJSON(value) {
-		return JSON.stringify(this.toRootSerializable(value));
+		return JSON.stringify(this.toRootPacked(value));
 	}
 	
 	fromJSON(serializedPayload) {
-		return this.fromRootSerializable(JSON.parse(serializedPayload));
+		return this.fromRootPacked(JSON.parse(serializedPayload));
 	}
 	
-	toRootSerializable(value) {
+	toRootPacked(value) {
 		return {
 			version: SERIALIZATION_VERSION,
-			data: this.toSerializable(value)
+			data: this.toPacked(value)
 		};
 	}
 	
-	fromRootSerializable(rootSerializable) {
-		return this.fromSerializable(rootSerializable.data);
+	fromRootPacked(rootPacked) {
+		return this.fromPacked(rootPacked.data);
 	}
 	
-	toSerializable(value) {
+	toPacked(value) {
 		if (typeof value === 'object') {
 			// Object: needs conversion
 			const metadata = this._getMetadataForClass(value.constructor);
@@ -48,31 +48,31 @@ export default class Serializer {
 			if (!metadata) {
 				throw new Error(`${value.constructor.name} does not support serialization`);
 			} else {
-				return this._instanceToSerializable(value, metadata);
+				return this._instanceToPacked(value, metadata);
 			}
 		} else {
-			// Primitive type: already serializable
+			// Primitive type: no need to pack
 			return value;
 		}
 	}
 	
-	fromSerializable(serializable) {
-		if (typeof serializable === 'object') {
+	fromPacked(packed) {
+		if (typeof packed === 'object') {
 			// Object: needs conversion
-			const metadata = this._getMetadataForIdentifier(serializable.classIdentifier);
+			const metadata = this._getMetadataForIdentifier(packed.classIdentifier);
 			
 			if (!metadata) {
-				throw new Error(`Unknown class ${serializable.classIdentifier} when deserializing`);
+				throw new Error(`Unknown class ${packed.classIdentifier} when deserializing`);
 			} else {
-				return this._instanceFromSerializable(serializable, metadata);
+				return this._instanceFromPacked(packed, metadata);
 			}
 		} else {
 			// Primitive type: already usable
-			return serializable;
+			return packed;
 		}
 	}
 	
-	_instanceToSerializable(instance, metadata) {
+	_instanceToPacked(instance, metadata) {
 		let result;
 		
 		if (metadata.fields) {
@@ -85,10 +85,10 @@ export default class Serializer {
 					fieldValue = fieldFilter(fieldValue);
 				}
 				
-				result[fieldName] = this.toSerializable(fieldValue);
+				result[fieldName] = this.toPacked(fieldValue);
 			});
 		} else {
-			result = metadata.to(instance);
+			result = metadata.pack(instance);
 		}
 		
 		result = {
@@ -99,21 +99,21 @@ export default class Serializer {
 		return result;
 	}
 	
-	_instanceFromSerializable(serializable, metadata) {
+	_instanceFromPacked(packed, metadata) {
 		if (metadata.fields) {
 			let fieldValues = {};
 			metadata.fields.forEach(fieldName => {
-				fieldValues[fieldName] = this.fromSerializable(serializable.data[fieldName]);
+				fieldValues[fieldName] = this.fromPacked(packed.data[fieldName]);
 			});
 			
-			if (metadata.from) {
-				return metadata.from(fieldValues);
+			if (metadata.unpack) {
+				return metadata.unpack(fieldValues);
 			} else {
 				const orderedFieldValues = metadata.fields.map(fieldName => fieldValues[fieldName]);
 				return new metadata.klass(...orderedFieldValues);
 			}
 		} else {
-			return metadata.from(serializable.data);
+			return metadata.unpack(packed.data);
 		}
 	}
 	
