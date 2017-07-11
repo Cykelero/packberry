@@ -69,9 +69,9 @@ With just a `fields` parameter, PackBerry will pack the listed fields, and then 
 serializer.register(Movie, {
 	fields: ['name', 'year']
 });
-````
 
 // means that when unpacking, PackBerry will call `new Movie(name, year)`
+````
 
 ### unpack
 
