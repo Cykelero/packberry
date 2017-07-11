@@ -7,15 +7,15 @@ rootSerializer.register(Object, {
 		result[key] = Serializer.toPacked(v[key]);
 		return result;
 	}, {}),
-	unpack: s => Object.keys(s).reduce((result, key) => {
-		result[key] = Serializer.fromPacked(s[key]);
+	unpack: p => Object.keys(p).reduce((result, key) => {
+		result[key] = Serializer.fromPacked(p[key]);
 		return result;
 	}, {})
 });
 
 rootSerializer.register(Array, {
 	pack: v => v.map(i => Serializer.toPacked(i)),
-	unpack: s => s.map(i => Serializer.fromPacked(i))
+	unpack: p => p.map(i => Serializer.fromPacked(i))
 });
 
 export { Serializer as Serializer };
