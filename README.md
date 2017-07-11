@@ -109,7 +109,7 @@ They could be resolved without dramatically overhauling PackBerry, but as of tod
 - To identify a class, PackBerry relies on its `name`. This might break if you minify your code.
 - PackBerry doesn't understand inheritance right now. You'll have to register each subclass separately.
 - PackBerry includes class identifiers in the packed data, to know which class to instantiate when unpacking; this is quite verbose.
-- Some native JavaScript classes (such as `RegExp`, `Map`, `Set`, and `Int8Array`) don't currently have built-in PackBerry support.
+- Some native JavaScript classes (such as `Int8Array`) don't currently have built-in PackBerry support. `RegExp` state is not conserved when packing.
 
 ## Development
 

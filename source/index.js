@@ -18,4 +18,18 @@ rootSerializer.register(Array, {
 	unpack: p => p.map(i => rootSerializer.fromPacked(i))
 });
 
+rootSerializer.register(Map, {
+	pack: v => Array.from(v, p => p.map(i => rootSerializer.toPacked(i))),
+	unpack: p => new Map(p.map(p2 => p2.map(i => rootSerializer.fromPacked(i))))
+});
+
+rootSerializer.register(Set, {
+	pack: v => Array.from(v, i => rootSerializer.toPacked(i)),
+	unpack: p => new Set(p.map(i => rootSerializer.fromPacked(i)))
+});
+
+rootSerializer.register(RegExp, {
+	fields: ['source', 'flags']
+});
+
 export { Serializer as Serializer };
