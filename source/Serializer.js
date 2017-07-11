@@ -78,14 +78,7 @@ export default class Serializer {
 		if (metadata.fields) {
 			result = {};
 			metadata.fields.forEach(fieldName => {
-				let fieldValue = instance[fieldName];
-				
-				const fieldFilter = metadata.filters && metadata.filters[fieldName];
-				if (fieldFilter) {
-					fieldValue = fieldFilter(fieldValue);
-				}
-				
-				result[fieldName] = this.toPacked(fieldValue);
+				result[fieldName] = this.toPacked(instance[fieldName]);
 			});
 		} else {
 			result = metadata.pack(instance);

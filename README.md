@@ -71,21 +71,6 @@ serializer.register(Movie, {
 });
 
 // means that when unpacking, PackBerry will call `new Movie(name, year)`
-````
-
-### filters
-
-If some of your data needs to be transformed before packing, declare a filter:
-
-````js
-// This makes sure the year is packed as an integer
-serializer.register(Movie, {
-	fields: ['name', 'year'],
-	filters: {
-		year: v => parseInt(v)
-	}
-});
-````
 
 ### unpack
 
@@ -100,7 +85,7 @@ serializer.register(Movie, {
 
 ### pack
 
-If you can't list all the fields in advance, use `pack` instead of `fields` (and `filters`), and do the packing yourself. The returned value must be readily JSON-serializable.
+If you can't list all the fields in advance, use `pack` instead of `fields`, and do the packing yourself. The returned value must be readily JSON-serializable.
 
 ````js
 serializer.register(Movie, {
