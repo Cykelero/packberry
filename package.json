@@ -1,6 +1,6 @@
 {
   "name": "packberry",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Serialize and deserialize class instances",
   "repository": "https://github.com/cykelero/packberry.git",
   "main": "build/index.js",
